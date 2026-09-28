@@ -1,0 +1,79 @@
+One-time setup
+
+1. Go to the project folder
+
+powershell
+cd C:\Users\hardi\Downloads\plant-disease-classifier1\plant-disease-classifier
+
+2. Create and activate a virtual environment
+
+powershell
+python -m venv venv
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+venv\Scripts\activate
+
+You should now see (venv) at the start of the prompt. The Set-ExecutionPolicy line only affects this terminal window and stops PowerShell from blocking the activation script.
+
+3. Install dependencies
+
+powershell
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+python -m pip install -U kaggle
+
+4. Save your Kaggle credentials (once)
+
+Get a new token at kaggle.com → Settings → API → Create New Token. Copy the key shown on screen, since it isn't shown again. Don't paste it into any chat.
+
+powershell
+mkdir $env:USERPROFILE\.kaggle -Force
+'{"username":"<your_kaggle_username>","key":"<your_api_key>"}' | Out-File -FilePath $env:USERPROFILE\.kaggle\kaggle.json -Encoding ascii
+type $env:USERPROFILE\.kaggle\kaggle.json
+
+The last line should print one line of valid JSON. If the download step later fails with an authentication error, run this in the same terminal and try again:
+
+powershell
+$env:KAGGLE_API_TOKEN = "<your_api_key>"
+
+5. Download the dataset
+
+powershell
+python download_dataset.py --output_dir ./dataset
+dir dataset\PlantVillage
+
+You should see the class folders (Potato___Early_blight, Tomato_healthy, and so on). If you see another PlantVillage folder inside, use ./dataset/PlantVillage/PlantVillage in the next step.
+
+6. Train the model
+
+Quick test run (short, less accurate):
+
+powershell
+python train_model.py --data_dir ./dataset/PlantVillage --epochs 2 --fine_tune_epochs 1
+
+Full run (much better accuracy, slow on CPU):
+
+powershell
+python train_model.py --data_dir ./dataset/PlantVillage --epochs 15 --fine_tune_epochs 5
+
+When it finishes, check the files exist:
+
+powershell
+dir model
+
+You need plant_disease_model.keras and class_names.json.
+
+7. Run the web app
+
+powershell
+uvicorn app:app --port 8001
+
+Look for Loaded model with 16 classes. in the output, then open http://localhost:8001 and upload a leaf photo. You can check http://localhost:8001/health, which should show "model_loaded":true.
+
+Next time (setup and training already done)
+
+Only these three commands are needed:
+
+powershell
+cd C:\Users\hardi\Downloads\plant-disease-classifier1\plant-disease-classifier
+venv\Scripts\activate
+uvicorn app:app --port 8001

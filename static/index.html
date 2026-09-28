@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Plant Disease Classifier</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>🌿 Plant Disease Classifier</h1>
+    <p class="subtitle">Upload a photo of a plant leaf to detect possible diseases.</p>
+
+    <div class="upload-box" id="dropZone">
+      <input type="file" id="fileInput" accept="image/*" hidden />
+      <div id="uploadPrompt">
+        <p>Drag &amp; drop an image here, or click to select</p>
+      </div>
+      <img id="preview" hidden />
+    </div>
+
+    <button id="predictBtn" disabled>Analyze Leaf</button>
+
+    <div id="result" class="result" hidden>
+      <h2 id="mainPrediction"></h2>
+      <p id="mainConfidence"></p>
+      <div id="top3"></div>
+    </div>
+
+    <div id="error" class="error" hidden></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
